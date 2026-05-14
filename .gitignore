@@ -1,0 +1,19 @@
+# Ignore local IDE configurations
+.vscode/
+
+# Ignore machine-specific path overrides
+config_local.py
+
+# Ignore compiled scenario profiling data across all target horizons
+**/01_PV/
+**/02_BESS/
+**/03_HP/
+**/04_EV/
+**/05_Demand/
+**/06_Grids/geojson_data/
+**/06_Grids/*.zip
+**/06_Grids/*.txt
+**/06_Grids/*.csv
+**/06_Grids/*.xlsx
+**/07_Complementary_data/
+**/outputs/
