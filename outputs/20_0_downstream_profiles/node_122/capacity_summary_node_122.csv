@@ -1,0 +1,2 @@
+MV_grid,MV_osmid,pv_count,pv_p_installed_kW,hp_count,hp_nominal_power_kW,hp_thermal_capacitance_kWh_per_K,hp_thermal_conductivity_kW_per_K,bess_count,bess_capacity_kWh,bess_nominal_power_kW,bess_charging_efficiency_weighted,bess_discharging_efficiency_weighted,total_nominal_power_kW
+20_0,122,2.0,340.0515220100732,17.0,246.66257692572552,407.49999999999994,6.91028816690178,4.0,65.41424380008554,26.16569752003422,0.9219544457292888,0.9219544457292888,612.8797964558329
