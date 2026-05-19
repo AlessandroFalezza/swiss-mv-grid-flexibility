@@ -1,0 +1,8 @@
+{
+  "grid_name": "20_0",
+  "data_year": 2030,
+  "setpoint_c": 20.0,
+  "ev_power_factor": 0.95,
+  "cache_dir": "outputs\\20_0_profiles_mveq_evbase_2030",
+  "ffor_inputs_dir": "outputs\\20_0_profiles_mveq_evbase_2030\\ffor_inputs"
+}

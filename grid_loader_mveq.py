@@ -225,9 +225,7 @@ class Grid20Loader:
         connected_lv = set(str(v) for v in self.mv_to_lv.values())
 
         if path.exists() and connected_lv:
-            lv_generation = pd.read_csv(str(path))
-            lv_generation["LV_grid"] = lv_generation["LV_grid"].astype(str)
-            lv_generation = lv_generation[lv_generation["LV_grid"].isin(connected_lv)]
+            lv_generation = self._read_csv_filtered_by_values(path, "LV_grid", connected_lv)
             lv_generation = self._expand_monthly_representative_days(
                 lv_generation, ["LV_grid", "LV_osmid"]
             )
@@ -313,9 +311,7 @@ class Grid20Loader:
 
         path = base_path / "LV_heat_pump_allocation.csv"
         if path.exists() and connected_lv:
-            lv_hp = pd.read_csv(str(path))
-            lv_hp["LV_grid"] = lv_hp["LV_grid"].astype(str)
-            lv_hp = lv_hp[lv_hp["LV_grid"].isin(connected_lv)]
+            lv_hp = self._read_csv_filtered_by_values(path, "LV_grid", connected_lv)
             for _, hp in lv_hp.iterrows():
                 lv_grid = str(hp["LV_grid"])
                 mv_osmid = self.lv_to_mv.get(lv_grid)
@@ -393,9 +389,7 @@ class Grid20Loader:
             self.bess_lv_aggregated_to_mv_allocation = pd.DataFrame(columns=self._bess_output_columns())
             return self.bess_lv_aggregated_to_mv_allocation
 
-        lv_bess = pd.read_csv(str(path))
-        lv_bess["LV_grid"] = lv_bess["LV_grid"].astype(str)
-        lv_bess = lv_bess[lv_bess["LV_grid"].isin(connected_lv)].copy()
+        lv_bess = self._read_csv_filtered_by_values(path, "LV_grid", connected_lv)
 
         rows = []
         for lv_grid, group in lv_bess.groupby("LV_grid"):
@@ -658,6 +652,23 @@ class Grid20Loader:
             result[str(lv_grid)] = total
         return result
 
+    @staticmethod
+    def _read_csv_filtered_by_values(path, column, values, chunksize=100_000):
+        values = set(str(value) for value in values)
+        frames = []
+        columns = None
+
+        for chunk in pd.read_csv(str(path), chunksize=chunksize):
+            columns = chunk.columns
+            chunk[column] = chunk[column].astype(str)
+            chunk = chunk[chunk[column].isin(values)].copy()
+            if not chunk.empty:
+                frames.append(chunk)
+
+        if frames:
+            return pd.concat(frames, ignore_index=True, sort=False)
+        return pd.DataFrame(columns=columns)
+
     def _load_lv_peak_maps(self, lv_grids):
         grids_path = str(self.project_path / "06_Grids")
         dict_path = os.path.join(grids_path, "dict_folder.json")
@@ -800,9 +811,7 @@ class Grid20Loader:
         connected_lv = set(str(v) for v in self.mv_to_lv.values())
         if not path.exists() or not connected_lv:
             return pd.DataFrame(columns=["MV_osmid"])
-        pv = pd.read_csv(str(path))
-        pv["LV_grid"] = pv["LV_grid"].astype(str)
-        pv = pv[pv["LV_grid"].isin(connected_lv)].copy()
+        pv = self._read_csv_filtered_by_values(path, "LV_grid", connected_lv)
         if pv.empty:
             return pd.DataFrame(columns=["MV_osmid"])
         pv["MV_osmid"] = pv["LV_grid"].map(self.lv_to_mv).astype(str)
@@ -832,9 +841,7 @@ class Grid20Loader:
         connected_lv = set(str(v) for v in self.mv_to_lv.values())
         if not path.exists() or not connected_lv:
             return pd.DataFrame(columns=["MV_osmid"])
-        hp = pd.read_csv(str(path))
-        hp["LV_grid"] = hp["LV_grid"].astype(str)
-        hp = hp[hp["LV_grid"].isin(connected_lv)].copy()
+        hp = self._read_csv_filtered_by_values(path, "LV_grid", connected_lv)
         if hp.empty:
             return pd.DataFrame(columns=["MV_osmid"])
         hp["MV_osmid"] = hp["LV_grid"].map(self.lv_to_mv).astype(str)
