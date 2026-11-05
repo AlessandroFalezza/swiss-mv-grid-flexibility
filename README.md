@@ -2,6 +2,21 @@
 
 <img src="images/mv_grid_topology.png" width="700" alt="Topology of the synthetic medium-voltage distribution grid">
 
+> **About this fork.** This is Alessandro Falezza's fork of the team repository
+> [LucaLazzari27/swiss-mv-grid-flexibility](https://github.com/LucaLazzari27/swiss-mv-grid-flexibility)
+> (ETH Zurich, Optimization in Energy Systems, spring 2026; team: Luca Lazzari, Pierpaolo Musiello,
+> Alessandro Falezza). The code below is the team's final delivery, unchanged; this fork only links
+> my original development commits into the history and adds this note.
+>
+> **My contribution.** In the initial phase I developed the multi-timestep OPF model behind the FFOR:
+> QuickFlex boundary search with an area-based criterion, intertemporal dynamics for PV, heat-pump
+> temperature and BESS state of charge, and automated diagnostics of the binding constraints. I then
+> carried out the BESS placement and sizing study, running the campaigns on the ETH Euler cluster with
+> Slurm job arrays: a 1 MW / 2.5 MWh unit swept over all MV buses (FFOR area gains from +1.05 to
+> +18.08 MW·MVAr; best sites at nodes 125 and 129, +34.8%), a monthly and scenario analysis at node 129
+> (2050 mean +22.0 MW·MVAr, up to +31.4 in July) and a size sweep from 0.5 to 4 MW with no global
+> saturation (up to +70.9 MW·MVAr). See the report section "BESS Placement and Sizing Sensitivity".
+
 This repository contains the final Python implementation and prepared input data
 used to compute multi-timestep Feasible Flexibility Operating Regions (FFORs)
 for a synthetic 20 kV medium-voltage distribution grid in Eschenbach SG,
